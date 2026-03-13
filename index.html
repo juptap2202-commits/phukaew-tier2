@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>PHUKAEW Tier List - Play with Friends</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #121212; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        h1 { letter-spacing: 2px; font-weight: 300; text-transform: uppercase; margin-bottom: 30px; }
+        #tier-list-container { width: 100%; max-width: 950px; border: 1px solid #333; background: #1a1a1a; margin-bottom: 20px; }
+        .tier-row { display: flex; min-height: 120px; border-bottom: 1px solid #333; }
+        .tier-label { width: 180px; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; text-align: center; padding: 15px; font-size: 14px; }
+        .tier-content { flex-grow: 1; background: #1e1e1e; padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; min-height: 100px; }
+        .tier-item { width: 100px; height: 100px; border: 1px solid #444; cursor: grab; overflow: hidden; background: #000; }
+        .tier-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .drag-over { background: #333 !important; border: 2px dashed #fff !important; }
+        #image-pool-container { width: 100%; max-width: 950px; background: #1a1a1a; padding: 25px; border: 1px solid #333; border-radius: 4px; }
+        .pool-header { margin-bottom: 15px; color: #888; font-size: 12px; letter-spacing: 1px; }
+        #image-pool { min-height: 150px; border: 1px dashed #444; }
+    </style>
+</head>
+<body>
+
+    <h1>PHUKAEW TIER LIST</h1>
+
+    <div id="tier-list-container">
+        <div class="tier-row"><div class="tier-label" style="background: #FF4B2B;">รู้งี้ซื้อตั้งนานแล้ว</div><div class="tier-content"></div></div>
+        <div class="tier-row"><div class="tier-label" style="background: #FF8C00;">มีไว้ชีวิตดีขึ้น 200%</div><div class="tier-content"></div></div>
+        <div class="tier-row"><div class="tier-label" style="background: #FFD700;">ของดีบอกต่อ</div><div class="tier-content"></div></div>
+        <div class="tier-row"><div class="tier-label" style="background: #90EE90;">มีก็ได้ ไม่มีก็ได้</div><div class="tier-content"></div></div>
+    </div>
+
+    <div id="image-pool-container">
+        <div class="pool-header">เลือกสินค้าลากไปวางจัดอันดับได้เลย! (รีเฟรชเพื่อเริ่มใหม่)</div>
+        <div id="image-pool" class="tier-content"></div>
+    </div>
+
+    <script>
+        // --- รายชื่อไฟล์รูปภาพ (ตรวจสอบชื่อไฟล์ในโฟลเดอร์ให้ตรงกัน) ---
+        const imageUrls = [
+            'phu1.png',
+            'phu2.png',
+            'phu3.png',
+            'phu4.png',
+            'phu5.png',
+            'phu6.png',
+            'phu7.png',
+            'phu8.png',
+            'phu9.png',
+            'phu10.png',
+            'phu11.png',
+            'phu12.png',
+            'phu13.png',
+            'phu14.png',
+            'phu15.png'
+        ];
+
+        let draggedItem = null;
+
+        window.onload = () => {
+            const pool = document.getElementById('image-pool');
+            imageUrls.forEach(url => {
+                const div = document.createElement('div');
+                div.className = 'tier-item';
+                div.draggable = true;
+                // เพิ่มการแจ้งเตือนเบื้องต้นหากหาไฟล์ไม่เจอ
+                div.innerHTML = `<img src="${url}" onerror="console.log('หาไฟล์ไม่เจอ: ${url}'); this.parentElement.style.border='1px solid red';">`;
+                
+                div.addEventListener('dragstart', () => { 
+                    draggedItem = div;
+                    setTimeout(() => div.style.opacity = '0.5', 0);
+                });
+                
+                div.addEventListener('dragend', () => { 
+                    div.style.opacity = '1';
+                    draggedItem = null; 
+                });
+
+                pool.appendChild(div);
+            });
+        };
+
+        document.querySelectorAll('.tier-content').forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('drag-over');
+            });
+            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                if (draggedItem) zone.appendChild(draggedItem);
+            });
+        });
+    </script>
+</body>
+</html>
